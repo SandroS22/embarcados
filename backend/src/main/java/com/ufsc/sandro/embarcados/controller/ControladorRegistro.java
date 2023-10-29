@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,11 +25,11 @@ public class ControladorRegistro {
 	private RegistroService registroService;
 
 	@GetMapping
-	@ResponseBody
-	public List<Registro> getAll() {
+	public String getAll(ModelMap model) {
 		List<Registro> registros = new ArrayList<>();
 		registros.addAll(registroService.getAll());
-		return registros;
+		model.addAttribute("registros", registros);
+		return "registros";
 	}
 
 	@PostMapping

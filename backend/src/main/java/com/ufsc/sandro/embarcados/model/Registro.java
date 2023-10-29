@@ -35,4 +35,13 @@ public class Registro {
 		this.data = data;
 	}
 
+	public UUID getId() {
+		return id;
+	}
+
+	@Override
+	public String toString() {
+		return "Registro [id=" + id + ", data=" + data + "]";
+	}
+
 }
