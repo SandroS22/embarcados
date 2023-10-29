@@ -34,8 +34,8 @@ public class ControladorRegistro {
 
 	@PostMapping
 	@ResponseBody
-	public HttpStatus criarRegistro(@RequestParam Date data) {
-		Registro novoRegistro = new Registro(data);
+	public HttpStatus criarRegistro(@RequestParam String construir) {
+		Registro novoRegistro = new Registro(new Date());
 		registroService.save(novoRegistro);
 		return HttpStatus.CREATED;
 	}
