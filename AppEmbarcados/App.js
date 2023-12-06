@@ -1,92 +1,84 @@
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Dimensions } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// const historico = () => {
-//   const [histObject, setHistObject] = useState("[]");
-
-//   const carregarHistorico = () => {
-//     fetch(`http://localhost:8080/`)
-//       .then((response) => response.text())
-//       .then((data) => {
-//         setHistObject(data);
-//         console.log(data);
-//       })
-//       .catch((err) => {
-//         console.err("Erro: ", err);
-//         alert(err);
-//       });
-//   };
-// };
-
 export default function App() {
-  var leituras = []
+  var leituras = [];
 
-  var horario = []
+  var horario = [];
 
   const [hist, setHist] = useState([null]);
-  const[leitura, setLeitura] = useState([]);
-  const[horarios, setHorarios] = useState([]);
+  const [leitura, setLeitura] = useState([]);
+  const [horarios, setHorarios] = useState([]);
 
   const fetchHist = async () => {
-    const response = await axios.get("http://localhost:8080", { mode: "no-cors" });
+    const response = await axios.get("http://localhost:8080", {
+      mode: "no-cors",
+    }).catch(err => console.error('Erro: ', err))
+    alert(err);
     setHist(response.data);
 
-    const datasetss = response.data.map(item => ({leitura: item.leitura, date: item.data}))
-    console.log(datasetss[0]['date'])
+    const datasetss = response.data.map((item) => ({
+      leitura: item.leitura,
+      date: item.data,
+    }));
+    setHist(datasetss);
 
-    leituras = datasetss.map(item => item.leitura)
-    setHist(datasetss)
+    leituras = datasetss.map((item) => item.leitura);
+    setLeitura(leituras);
 
-    horario = leituras = datasetss.map(item => item.date)
-    setHorarios(horario)
-
-    const addLeitura = () => {
-      leituras.map(item => setLeitura(leituras.concat(item)))
-    }
-
-    setLeitura(leituras)
+    horario = datasetss.map((item) => item.date);
+    setHorarios(horario);
 
   };
 
-  console.log(hist)
   useEffect(() => {
-    //setInterval = criando um temporizado para acessar o servidor a cada x milisegundos. chamando o fetch;
     const timer = setInterval(async () => {
       await fetchHist();
     }, 1000); // tempo que ele vai demorar para buscar no servidor
 
-    //funcao para limpar a memoria quando tivesse varias paginas
     return () => clearInterval(timer);
   }, []);
 
+  console.log(horarios[horarios.length - 1]);
+
   return (
     <View>
-      <Text>Bezier Line Chart</Text>
+      <Text></Text>
+      <Text></Text>
+      <Text></Text>
+      <Text></Text>
+      <Text></Text>
       <LineChart
         data={{
-          labels: ["jan", "February", "March", "April"],
+          labels: [
+            horarios[horarios.length - 5],
+            horarios[horarios.length - 4],
+            horarios[horarios.length - 3],
+            horarios[horarios.length - 2],
+            horarios[horarios.length - 1],
+          ],
           datasets: [
             {
               data: [
-                leitura[leitura.length-1],
-                leitura[leitura.length-2],
-                leitura[leitura.length-3],
-                leitura[leitura.length-4],
-              ]
+                leitura[leitura.length - 5],
+                leitura[leitura.length - 4],
+                leitura[leitura.length - 3],
+                leitura[leitura.length - 2],
+                leitura[leitura.length - 1],
+              ],
             },
           ],
         }}
-        width={Dimensions.get("window").width} // from react-native
+        width={Dimensions.get("window").width}
         height={220}
-        yAxisInterval={1} // optional, defaults to 1
+        yAxisInterval={1}
         chartConfig={{
           backgroundColor: "#e26a00",
           backgroundGradientFrom: "#fb8c00",
           backgroundGradientTo: "#ffa726",
-          decimalPlaces: 0, // optional, defaults to 2dp
+          decimalPlaces: 0,
           color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
           labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
           style: {

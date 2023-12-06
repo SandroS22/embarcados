@@ -25,8 +25,9 @@ public class Registro {
 
 	}
 
-	public Registro(Date data) {
+	public Registro(Date data, Integer leitura) {
 		this.data = data;
+		this.leitura = leitura;
 	}
 
 	public Date getData() {
