@@ -22,18 +22,36 @@ import axios from "axios";
 // };
 
 export default function App() {
-  const [hist, setHist] = useState(null);
+  var leituras = []
+
+  var horario = []
+
+  const [hist, setHist] = useState([null]);
+  const[leitura, setLeitura] = useState([]);
+  const[horarios, setHorarios] = useState([]);
 
   const fetchHist = async () => {
     const response = await axios.get("http://localhost:8080", { mode: "no-cors" });
     setHist(response.data);
 
     const datasetss = response.data.map(item => ({leitura: item.leitura, date: item.data}))
+    console.log(datasetss[0]['date'])
 
-    const leituras = datasetss.map(item => item.leitura)
+    leituras = datasetss.map(item => item.leitura)
+    setHist(datasetss)
+
+    horario = leituras = datasetss.map(item => item.date)
+    setHorarios(horario)
+
+    const addLeitura = () => {
+      leituras.map(item => setLeitura(leituras.concat(item)))
+    }
+
+    setLeitura(leituras)
 
   };
 
+  console.log(hist)
   useEffect(() => {
     //setInterval = criando um temporizado para acessar o servidor a cada x milisegundos. chamando o fetch;
     const timer = setInterval(async () => {
@@ -49,30 +67,26 @@ export default function App() {
       <Text>Bezier Line Chart</Text>
       <LineChart
         data={{
-          labels: ["January", "February", "March", "April"],
+          labels: ["jan", "February", "March", "April"],
           datasets: [
             {
               data: [
-                Math.random(),
-                Math.random(),
-                Math.random(),
-                Math.random(),
-                Math.random(),
-                Math.random()
-              ],
+                leitura[leitura.length-1],
+                leitura[leitura.length-2],
+                leitura[leitura.length-3],
+                leitura[leitura.length-4],
+              ]
             },
           ],
         }}
         width={Dimensions.get("window").width} // from react-native
         height={220}
-        yAxisLabel="$"
-        yAxisSuffix="k"
         yAxisInterval={1} // optional, defaults to 1
         chartConfig={{
           backgroundColor: "#e26a00",
           backgroundGradientFrom: "#fb8c00",
           backgroundGradientTo: "#ffa726",
-          decimalPlaces: 2, // optional, defaults to 2dp
+          decimalPlaces: 0, // optional, defaults to 2dp
           color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
           labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
           style: {
