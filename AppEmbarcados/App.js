@@ -1,24 +1,64 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Dimensions } from "react-native";
 import { LineChart } from "react-native-chart-kit";
-import { Dimensions } from "react-native";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+// const historico = () => {
+//   const [histObject, setHistObject] = useState("[]");
+
+//   const carregarHistorico = () => {
+//     fetch(`http://localhost:8080/`)
+//       .then((response) => response.text())
+//       .then((data) => {
+//         setHistObject(data);
+//         console.log(data);
+//       })
+//       .catch((err) => {
+//         console.err("Erro: ", err);
+//         alert(err);
+//       });
+//   };
+// };
 
 export default function App() {
+  const [hist, setHist] = useState(null);
+
+  const fetchHist = async () => {
+    const response = await axios.get("http://localhost:8080", { mode: "no-cors" });
+    setHist(response.data);
+
+    const datasetss = response.data.map(item => ({leitura: item.leitura, date: item.data}))
+
+    const leituras = datasetss.map(item => item.leitura)
+
+  };
+
+  useEffect(() => {
+    //setInterval = criando um temporizado para acessar o servidor a cada x milisegundos. chamando o fetch;
+    const timer = setInterval(async () => {
+      await fetchHist();
+    }, 1000); // tempo que ele vai demorar para buscar no servidor
+
+    //funcao para limpar a memoria quando tivesse varias paginas
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <View>
       <Text>Bezier Line Chart</Text>
       <LineChart
         data={{
-          labels: ["January", "February", "March", "April", "May", "June"],
+          labels: ["January", "February", "March", "April"],
           datasets: [
             {
               data: [
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
+                Math.random(),
+                Math.random(),
+                Math.random(),
+                Math.random(),
+                Math.random(),
+                Math.random()
               ],
             },
           ],
