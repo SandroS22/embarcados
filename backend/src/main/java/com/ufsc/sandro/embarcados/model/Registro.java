@@ -19,6 +19,8 @@ public class Registro {
 
 	private Date data;
 
+	private Integer leitura;
+
 	public Registro() {
 
 	}
@@ -37,6 +39,14 @@ public class Registro {
 
 	public UUID getId() {
 		return id;
+	}
+
+	public Integer getLeitura() {
+		return leitura;
+	}
+
+	public void setLeitura(Integer leitura) {
+		this.leitura = leitura;
 	}
 
 	@Override
